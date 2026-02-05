@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>BENNY SHOP | Products</title>
+
+<style>
+body{
+  font-family:Arial;
+  margin:0;
+  background:#f1f8e9;
+}
+.header{
+  background:#2e7d32;
+  color:white;
+  padding:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.cart{
+  position:relative;
+  cursor:pointer;
+}
+.badge{
+  position:absolute;
+  top:-6px;
+  right:-10px;
+  background:red;
+  color:white;
+  border-radius:50%;
+  padding:2px 6px;
+  font-size:12px;
+}
+.products{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.card{
+  background:white;
+  width:250px;
+  margin:12px;
+  padding:12px;
+  border-radius:12px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.2);
+  text-align:center;
+}
+.card img{
+  width:100%;
+  border-radius:10px;
+}
+button{
+  background:#2e7d32;
+  color:white;
+  border:none;
+  padding:8px;
+  width:100%;
+  border-radius:6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <b>BENNY SHOP</b>
+  <div class="cart" onclick="goCart()">
+    🛒 <span class="badge" id="cartCount">0</span>
+  </div>
+</div>
+
+<div class="products">
+
+  <div class="card">
+    <img src="https://image.hm.com/assets/hm/63/94/63949b2752da3d1b70ed675fab364dcff471ff0a.jpg?imwidth=1260">
+    <h4>Oversized Sweatshirt</h4>
+    <p>590 THB</p>
+    <button onclick="add(0)">Add to Cart</button>
+  </div>
+
+  <div class="card">
+    <img src="https://image.hm.com/assets/hm/55/61/5561e6998be02fcd0a5499c752bf4777fe61a2e8.jpg?imwidth=2160">
+    <h4>Loose Fit Sweatshirt</h4>
+    <p>690 THB</p>
+    <button onclick="add(1)">Add to Cart</button>
+  </div>
+
+</div>
+
+<script>
+let products=[
+ {name:"Oversized Sweatshirt",price:590,img:"https://image.hm.com/assets/hm/63/94/63949b2752da3d1b70ed675fab364dcff471ff0a.jpg?imwidth=1260"},
+ {name:"Loose Fit Sweatshirt",price:690,img:"https://image.hm.com/assets/hm/55/61/5561e6998be02fcd0a5499c752bf4777fe61a2e8.jpg?imwidth=2160"}
+];
+
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+
+function add(i){
+ let found=cart.find(p=>p.name===products[i].name);
+ if(found){found.qty++;}
+ else{cart.push({...products[i],qty:1});}
+ localStorage.setItem("cart",JSON.stringify(cart));
+ updateBadge();
+}
+
+function updateBadge(){
+ cartCount.innerText=cart.reduce((s,p)=>s+p.qty,0);
+}
+
+function goCart(){
+ window.location.href="index2.html";
+}
+
+updateBadge();
+</script>
+
+</body>
+</html>

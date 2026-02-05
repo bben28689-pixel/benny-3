@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>BENNY SHOP | Checkout</title>
+
+<style>
+body{
+  font-family:Arial;
+  margin:0;
+  background:#f1f8e9;
+}
+.header{
+  background:#2e7d32;
+  color:white;
+  padding:12px;
+  display:flex;
+  justify-content:space-between;
+}
+.badge{
+  background:red;
+  padding:2px 6px;
+  border-radius:50%;
+}
+.container{
+  max-width:800px;
+  margin:auto;
+  padding:10px;
+}
+.section{
+  background:white;
+  margin-bottom:12px;
+  padding:12px;
+  border-radius:12px;
+}
+.item{
+  display:flex;
+  align-items:center;
+  border-bottom:1px solid #eee;
+  padding-bottom:10px;
+  margin-bottom:10px;
+}
+.item img{
+  width:80px;
+  margin-right:10px;
+  border-radius:8px;
+}
+.qty button{
+  padding:4px 10px;
+}
+.delete{
+  margin-left:auto;
+  background:#c62828;
+  color:white;
+  border:none;
+  padding:6px;
+}
+button.main{
+  width:100%;
+  padding:12px;
+  background:#2e7d32;
+  color:white;
+  border:none;
+  border-radius:8px;
+  margin-top:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  BENNY SHOP
+  🛒 <span class="badge" id="cartCount">0</span>
+</div>
+
+<div class="container">
+
+<h2>Checkout</h2>
+
+<div class="section" id="list"></div>
+<div class="section" id="summary"></div>
+
+<div class="section">
+  <h4>Payment Method</h4>
+  <input type="radio" name="pay" onclick="qr.style.display='none'"> Cash on Delivery<br>
+  <input type="radio" name="pay" onclick="qr.style.display='block'"> QR Code
+  <div id="qr" style="display:none;margin-top:10px">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=BENNYSHOP">
+  </div>
+</div>
+
+<button class="main" onclick="pay()">Confirm Payment</button>
+<button class="main" onclick="back()">Back</button>
+
+</div>
+
+<script>
+let cart=JSON.parse(localStorage.getItem("cart"))||[];
+
+function render(){
+ let html="",sum=0,qty=0;
+ cart.forEach((p,i)=>{
+  sum+=p.price*p.qty; qty+=p.qty;
+  html+=`
+   <div class="item">
+    <img src="${p.img}">
+    <div>
+     ${p.name}<br>${p.price} THB
+     <div class="qty">
+      <button onclick="chg(${i},-1)">-</button>
+      ${p.qty}
+      <button onclick="chg(${i},1)">+</button>
+     </div>
+    </div>
+    <button class="delete" onclick="del(${i})">❌</button>
+   </div>`;
+ });
+ let vat=sum*0.07;
+ list.innerHTML=html||"No items";
+ summary.innerHTML=`
+  Items: ${qty}<br>
+  Subtotal: ${sum} THB<br>
+  VAT 7%: ${vat.toFixed(2)} THB<br>
+  <b>Total: ${(sum+vat).toFixed(2)} THB</b>`;
+ cartCount.innerText=qty;
+}
+function chg(i,c){cart[i].qty+=c;if(cart[i].qty<=0)cart.splice(i,1);save();}
+function del(i){cart.splice(i,1);save();}
+function save(){localStorage.setItem("cart",JSON.stringify(cart));render();}
+function pay(){alert("Payment Successful");localStorage.clear();window.location.href="index.html";}
+function back(){window.location.href="index.html";}
+render();
+</script>
+
+</body>
+</html>
